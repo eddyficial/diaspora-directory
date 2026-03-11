@@ -91,22 +91,22 @@
       waFloat.style.transition = 'none';
     }, { passive: true });
 
-    document.addEventListener('touchmove', function(e) {
+    waFloat.addEventListener('touchmove', function(e) {
       if (!isDragging) return;
+      e.preventDefault();
       var touch = e.touches[0];
       var dx = touch.clientX - startX;
       var dy = touch.clientY - startY;
       if (Math.abs(dx) > 5 || Math.abs(dy) > 5) wasMoved = true;
       var newLeft = startLeft + dx;
       var newBottom = startBottom - dy;
-      // Keep within viewport
       var size = waFloat.offsetWidth;
       newLeft = Math.max(8, Math.min(window.innerWidth - size - 8, newLeft));
       newBottom = Math.max(8, Math.min(window.innerHeight - size - 8, newBottom));
       waFloat.style.right = 'auto';
       waFloat.style.left = newLeft + 'px';
       waFloat.style.bottom = newBottom + 'px';
-    }, { passive: true });
+    }, { passive: false });
 
     document.addEventListener('touchend', function() {
       if (!isDragging) return;
