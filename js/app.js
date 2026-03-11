@@ -72,16 +72,30 @@
     });
   }
 
-  // --- Draggable WhatsApp Button ---
+  // --- Draggable WhatsApp Button (single touch = drag, double tap = open) ---
   var waFloat = document.querySelector('.whatsapp-float');
   if (waFloat) {
     var isDragging = false;
-    var wasMoved = false;
     var startX, startY, startLeft, startBottom;
+    var lastTap = 0;
+
+    // Prevent default click — we handle open via double tap
+    waFloat.addEventListener('click', function(e) {
+      e.preventDefault();
+    });
 
     waFloat.addEventListener('touchstart', function(e) {
+      var now = Date.now();
+      // Double tap detection
+      if (now - lastTap < 300) {
+        // Double tap — open WhatsApp
+        window.open(waFloat.href, '_blank');
+        lastTap = 0;
+        return;
+      }
+      lastTap = now;
+
       isDragging = true;
-      wasMoved = false;
       var touch = e.touches[0];
       startX = touch.clientX;
       startY = touch.clientY;
@@ -95,11 +109,8 @@
       if (!isDragging) return;
       e.preventDefault();
       var touch = e.touches[0];
-      var dx = touch.clientX - startX;
-      var dy = touch.clientY - startY;
-      if (Math.abs(dx) > 5 || Math.abs(dy) > 5) wasMoved = true;
-      var newLeft = startLeft + dx;
-      var newBottom = startBottom - dy;
+      var newLeft = startLeft + (touch.clientX - startX);
+      var newBottom = startBottom - (touch.clientY - startY);
       var size = waFloat.offsetWidth;
       newLeft = Math.max(8, Math.min(window.innerWidth - size - 8, newLeft));
       newBottom = Math.max(8, Math.min(window.innerHeight - size - 8, newBottom));
@@ -112,7 +123,7 @@
       if (!isDragging) return;
       isDragging = false;
       waFloat.style.transition = '';
-      // Snap to nearest horizontal edge
+      // Snap to nearest edge
       var rect = waFloat.getBoundingClientRect();
       var midX = rect.left + rect.width / 2;
       waFloat.style.left = 'auto';
@@ -122,14 +133,6 @@
       } else {
         waFloat.style.left = 'auto';
         waFloat.style.right = '16px';
-      }
-    });
-
-    // Prevent click (open link) if it was a drag
-    waFloat.addEventListener('click', function(e) {
-      if (wasMoved) {
-        e.preventDefault();
-        wasMoved = false;
       }
     });
   }
