@@ -72,13 +72,17 @@
   // --- Smooth scroll for anchor links ---
   document.querySelectorAll('a[href^="#"]').forEach(function(link) {
     link.addEventListener('click', function(e) {
-      var target = document.querySelector(this.getAttribute('href'));
-      if (target) {
-        e.preventDefault();
-        var offset = navbar ? navbar.offsetHeight : 0;
-        var top = target.getBoundingClientRect().top + window.scrollY - offset;
-        window.scrollTo({ top: top, behavior: 'smooth' });
-      }
+      var href = this.getAttribute('href');
+      if (!href || href === '#') return; // skip bare # links
+      try {
+        var target = document.querySelector(href);
+        if (target) {
+          e.preventDefault();
+          var offset = navbar ? navbar.offsetHeight : 0;
+          var top = target.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({ top: top, behavior: 'smooth' });
+        }
+      } catch(err) {}
     });
   });
 
