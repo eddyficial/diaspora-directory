@@ -438,6 +438,24 @@ ul { list-style: none; }
   color: var(--white);
 }
 
+/* --- Announcement Bar --- */
+.announcement-bar {
+  background: linear-gradient(90deg, var(--red), #ef4444);
+  color: var(--white);
+  text-align: center;
+  padding: 14px 24px;
+}
+.announcement-bar p {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* --- Hero Actions --- */
+.hero-actions {
+  margin-top: 20px;
+}
+
 /* --- Trust Bar --- */
 .trust-bar {
   background: var(--white);
