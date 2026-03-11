@@ -43,6 +43,35 @@
     deferredPrompt = null;
   });
 
+  // --- Share Button ---
+  var shareBtn = document.getElementById('shareBtn');
+  if (shareBtn) {
+    shareBtn.addEventListener('click', function() {
+      var shareData = {
+        title: 'Diaspora Directory',
+        text: 'Find trusted Kenyan service providers from anywhere in the diaspora. Install the app!',
+        url: window.location.href
+      };
+
+      if (navigator.share) {
+        navigator.share(shareData).catch(function() {});
+      } else {
+        // Fallback: copy link to clipboard
+        navigator.clipboard.writeText(window.location.href).then(function() {
+          var orig = shareBtn.innerHTML;
+          shareBtn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>';
+          shareBtn.style.borderColor = '#16a34a';
+          shareBtn.style.color = '#16a34a';
+          setTimeout(function() {
+            shareBtn.innerHTML = orig;
+            shareBtn.style.borderColor = '';
+            shareBtn.style.color = '';
+          }, 2000);
+        });
+      }
+    });
+  }
+
   // --- Navbar scroll effect ---
   var navbar = document.getElementById('navbar');
 

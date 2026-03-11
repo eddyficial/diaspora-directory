@@ -231,6 +231,28 @@ ul { list-style: none; }
   text-transform: uppercase;
 }
 
+/* Share Button */
+.btn-share {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid var(--gray-300);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition);
+  color: var(--gray-700);
+  flex-shrink: 0;
+}
+.btn-share:hover {
+  background: var(--red);
+  border-color: var(--red);
+  color: var(--white);
+}
+.btn-share svg { stroke: currentColor; }
+
 .nav-toggle {
   display: none;
   flex-direction: column;
