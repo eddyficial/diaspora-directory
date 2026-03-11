@@ -1,10 +1,13 @@
 // Diaspora Directory — Service Worker (Network-First)
-const CACHE_VERSION = 'dd-v3';
+const CACHE_VERSION = 'dd-v5';
 const PRECACHE = [
   './',
   './index.html',
-  './css/style.css?v=3',
-  './js/app.js?v=3',
+  './services.html',
+  './invest.html',
+  './more.html',
+  './css/style.css?v=5',
+  './js/app.js?v=5',
   './manifest.json'
 ];
 
