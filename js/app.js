@@ -3,24 +3,61 @@
 (function() {
   'use strict';
 
+  // --- PWA Install Prompt ---
+  var deferredPrompt = null;
+  var installBanner = document.getElementById('installBanner');
+  var installBtn = document.getElementById('installBtn');
+  var dismissBtn = document.getElementById('dismissInstall');
+
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    // Show install banner if not previously dismissed
+    if (!sessionStorage.getItem('pwa-dismissed')) {
+      installBanner.style.display = 'block';
+    }
+  });
+
+  if (installBtn) {
+    installBtn.addEventListener('click', function() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(function(result) {
+          deferredPrompt = null;
+          installBanner.style.display = 'none';
+        });
+      }
+    });
+  }
+
+  if (dismissBtn) {
+    dismissBtn.addEventListener('click', function() {
+      installBanner.style.display = 'none';
+      sessionStorage.setItem('pwa-dismissed', '1');
+    });
+  }
+
+  // Hide banner if already installed
+  window.addEventListener('appinstalled', function() {
+    installBanner.style.display = 'none';
+    deferredPrompt = null;
+  });
+
   // --- Navbar scroll effect ---
-  const navbar = document.getElementById('navbar');
-  let lastScroll = 0;
+  var navbar = document.getElementById('navbar');
 
   function onScroll() {
-    const y = window.scrollY;
-    if (y > 50) {
+    if (window.scrollY > 50) {
       navbar.classList.add('scrolled');
     } else {
       navbar.classList.remove('scrolled');
     }
-    lastScroll = y;
   }
   window.addEventListener('scroll', onScroll, { passive: true });
 
   // --- Mobile nav toggle ---
-  const navToggle = document.getElementById('navToggle');
-  const mobileDrawer = document.getElementById('mobileDrawer');
+  var navToggle = document.getElementById('navToggle');
+  var mobileDrawer = document.getElementById('mobileDrawer');
 
   if (navToggle && mobileDrawer) {
     navToggle.addEventListener('click', function() {
@@ -29,7 +66,6 @@
       document.body.style.overflow = mobileDrawer.classList.contains('open') ? 'hidden' : '';
     });
 
-    // Close drawer when a link is clicked
     mobileDrawer.querySelectorAll('a').forEach(function(link) {
       link.addEventListener('click', function() {
         navToggle.classList.remove('active');
@@ -42,7 +78,7 @@
   // --- Scroll animations (fade-up) ---
   function initAnimations() {
     var targets = document.querySelectorAll(
-      '.cat-card, .step-card, .provider-card, .cta-card, .section-header, .trust-item'
+      '.cat-card, .step-card, .provider-card, .cta-card, .section-header, .trust-item, .blog-card, .invest-card, .mini-cat, .faq-item'
     );
     targets.forEach(function(el) {
       el.classList.add('fade-up');
@@ -63,7 +99,6 @@
   if ('IntersectionObserver' in window) {
     initAnimations();
   } else {
-    // Fallback: just show everything
     document.querySelectorAll('.fade-up').forEach(function(el) {
       el.classList.add('visible');
     });
@@ -73,7 +108,7 @@
   document.querySelectorAll('a[href^="#"]').forEach(function(link) {
     link.addEventListener('click', function(e) {
       var href = this.getAttribute('href');
-      if (!href || href === '#') return; // skip bare # links
+      if (!href || href === '#') return;
       try {
         var target = document.querySelector(href);
         if (target) {
@@ -92,8 +127,8 @@
     searchBtn.addEventListener('click', function() {
       var input = document.querySelector('.search-input');
       if (input && input.value.trim()) {
-        // Placeholder: show alert. Replace with real search logic.
-        alert('Searching for: ' + input.value.trim());
+        // Redirect to the actual directory with search
+        window.open('https://thediasporadirectory.com/customer', '_blank');
       } else if (input) {
         input.focus();
         input.setAttribute('placeholder', 'Type a service...');
