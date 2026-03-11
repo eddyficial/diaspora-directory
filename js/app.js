@@ -79,16 +79,14 @@
     var startX, startY, startLeft, startBottom;
     var lastTap = 0;
 
-    // Prevent default click — we handle open via double tap
-    waFloat.addEventListener('click', function(e) {
-      e.preventDefault();
-    });
+    // Block default link behavior and long-press context menu
+    waFloat.addEventListener('click', function(e) { e.preventDefault(); });
+    waFloat.addEventListener('contextmenu', function(e) { e.preventDefault(); });
 
     waFloat.addEventListener('touchstart', function(e) {
+      e.preventDefault();
       var now = Date.now();
-      // Double tap detection
       if (now - lastTap < 300) {
-        // Double tap — open WhatsApp
         window.open(waFloat.href, '_blank');
         lastTap = 0;
         return;
@@ -103,7 +101,7 @@
       startLeft = rect.left;
       startBottom = window.innerHeight - rect.bottom;
       waFloat.style.transition = 'none';
-    }, { passive: true });
+    }, { passive: false });
 
     waFloat.addEventListener('touchmove', function(e) {
       if (!isDragging) return;

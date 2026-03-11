@@ -1148,6 +1148,9 @@ ul { list-style: none; }
   bottom: 24px;
   right: 24px;
   touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
   width: 56px;
   height: 56px;
   background: #25d366;
