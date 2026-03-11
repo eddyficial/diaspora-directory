@@ -72,6 +72,68 @@
     });
   }
 
+  // --- Draggable WhatsApp Button ---
+  var waFloat = document.querySelector('.whatsapp-float');
+  if (waFloat) {
+    var isDragging = false;
+    var wasMoved = false;
+    var startX, startY, startLeft, startBottom;
+
+    waFloat.addEventListener('touchstart', function(e) {
+      isDragging = true;
+      wasMoved = false;
+      var touch = e.touches[0];
+      startX = touch.clientX;
+      startY = touch.clientY;
+      var rect = waFloat.getBoundingClientRect();
+      startLeft = rect.left;
+      startBottom = window.innerHeight - rect.bottom;
+      waFloat.style.transition = 'none';
+    }, { passive: true });
+
+    document.addEventListener('touchmove', function(e) {
+      if (!isDragging) return;
+      var touch = e.touches[0];
+      var dx = touch.clientX - startX;
+      var dy = touch.clientY - startY;
+      if (Math.abs(dx) > 5 || Math.abs(dy) > 5) wasMoved = true;
+      var newLeft = startLeft + dx;
+      var newBottom = startBottom - dy;
+      // Keep within viewport
+      var size = waFloat.offsetWidth;
+      newLeft = Math.max(8, Math.min(window.innerWidth - size - 8, newLeft));
+      newBottom = Math.max(8, Math.min(window.innerHeight - size - 8, newBottom));
+      waFloat.style.right = 'auto';
+      waFloat.style.left = newLeft + 'px';
+      waFloat.style.bottom = newBottom + 'px';
+    }, { passive: true });
+
+    document.addEventListener('touchend', function() {
+      if (!isDragging) return;
+      isDragging = false;
+      waFloat.style.transition = '';
+      // Snap to nearest horizontal edge
+      var rect = waFloat.getBoundingClientRect();
+      var midX = rect.left + rect.width / 2;
+      waFloat.style.left = 'auto';
+      if (midX < window.innerWidth / 2) {
+        waFloat.style.right = 'auto';
+        waFloat.style.left = '16px';
+      } else {
+        waFloat.style.left = 'auto';
+        waFloat.style.right = '16px';
+      }
+    });
+
+    // Prevent click (open link) if it was a drag
+    waFloat.addEventListener('click', function(e) {
+      if (wasMoved) {
+        e.preventDefault();
+        wasMoved = false;
+      }
+    });
+  }
+
   // --- Navbar scroll effect ---
   var navbar = document.getElementById('navbar');
 
